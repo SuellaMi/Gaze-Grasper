@@ -3,6 +3,7 @@ package com.example.wearablerobotics
 
 
 import android.annotation.SuppressLint
+
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.SurfaceTexture
@@ -14,11 +15,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.widget.TextView
-
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+private const val TAG = "MY_APP_DEBUG_TAG"
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +34,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var textureView: TextureView
     lateinit var cameraCaptureSession: CameraCaptureSession
     lateinit var cameraDevice: CameraDevice
-    
+
+
+
+
+
 
 
     // The main function of this program. from there, it creates the program. in this case,
@@ -137,6 +146,7 @@ class MainActivity : AppCompatActivity() {
 
         var diesplayText:TextView= findViewById(R.id.text)
         diesplayText.setText("Bluetooth sends")
+
     }
 
 
