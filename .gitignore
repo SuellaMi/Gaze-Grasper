@@ -1,0 +1,14 @@
+# IntelliJ Config
+.idea
+!/.idea/inspectionProfiles
+
+# Build
+.gradle
+build
+.externalNativeBuild
+/apkOutput
+
+.DS_Store
+/captures
+.cxx
+local.properties
