@@ -1,5 +1,6 @@
 # IntelliJ Config
-.idea
+/.idea/*
+!/.idea/codeStyles
 !/.idea/inspectionProfiles
 
 # Build
