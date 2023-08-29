@@ -15,14 +15,14 @@ class BluetoothDataTransferService(
 ) {
     fun listenForIncomingMessages(): Flow<BluetoothMessage> {
         return flow {
-            if(!socket.isConnected) {
+            if (!socket.isConnected) {
                 return@flow
             }
             val buffer = ByteArray(1024)
-            while(true) {
+            while (true) {
                 val byteCount = try {
                     socket.inputStream.read(buffer)
-                } catch(e: IOException) {
+                } catch (e: IOException) {
                     throw TransferFailedException()
                 }
 
@@ -41,7 +41,7 @@ class BluetoothDataTransferService(
         return withContext(Dispatchers.IO) {
             try {
                 socket.outputStream.write(bytes)
-            } catch(e: IOException) {
+            } catch (e: IOException) {
                 e.printStackTrace()
                 return@withContext false
             }

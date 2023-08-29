@@ -56,9 +56,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    implementation("com.google.dagger:hilt-android-gradle-plugin:2.44")
+    val hiltVersion = "2.47"
+    implementation("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("com.google.dagger:hilt-android:2.42")
-    ksp("com.google.dagger:hilt-android-compiler:2.42")
+    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
     ksp("androidx.hilt:hilt-compiler:1.0.0")
 }

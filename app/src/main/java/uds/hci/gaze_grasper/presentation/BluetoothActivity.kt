@@ -51,18 +51,18 @@ class BluetoothActivity : ComponentActivity() {
         val permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { perms ->
-            val canEnableBluetooth = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val canEnableBluetooth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 perms[Manifest.permission.BLUETOOTH_CONNECT] == true
             } else true
 
-            if(canEnableBluetooth && !isBluetoothEnabled) {
+            if (canEnableBluetooth && !isBluetoothEnabled) {
                 enableBluetoothLauncher.launch(
                     Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 )
             }
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             permissionLauncher.launch(
                 arrayOf(
                     Manifest.permission.BLUETOOTH_SCAN,
@@ -87,7 +87,7 @@ class BluetoothActivity : ComponentActivity() {
                 }
 
                 LaunchedEffect(key1 = state.isConnected) {
-                    if(state.isConnected) {
+                    if (state.isConnected) {
                         Toast.makeText(
                             applicationContext,
                             "You're connected!",
@@ -110,6 +110,7 @@ class BluetoothActivity : ComponentActivity() {
                                 Text(text = "Connecting...")
                             }
                         }
+
                         state.isConnected -> {
                             ChatScreen(
                                 state = state,
@@ -117,6 +118,7 @@ class BluetoothActivity : ComponentActivity() {
                                 onSendMessage = viewModel::sendMessage
                             )
                         }
+
                         else -> {
                             DeviceScreen(
                                 state = state,

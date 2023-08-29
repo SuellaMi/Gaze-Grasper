@@ -24,7 +24,7 @@ import java.util.*
 @SuppressLint("MissingPermission")
 class AndroidBluetoothController(
     private val context: Context
-): BluetoothController {
+) : BluetoothController {
 
     private val bluetoothManager by lazy {
         context.getSystemService(BluetoothManager::class.java)
@@ -54,12 +54,12 @@ class AndroidBluetoothController(
     private val foundDeviceReceiver = FoundDeviceReceiver { device ->
         _scannedDevices.update { devices ->
             val newDevice = device.toBluetoothDeviceDomain()
-            if(newDevice in devices) devices else devices + newDevice
+            if (newDevice in devices) devices else devices + newDevice
         }
     }
 
     private val bluetoothStateReceiver = BluetoothStateReceiver { isConnected, bluetoothDevice ->
-        if(bluetoothAdapter?.bondedDevices?.contains(bluetoothDevice) == true) {
+        if (bluetoothAdapter?.bondedDevices?.contains(bluetoothDevice) == true) {
             _isConnected.update { isConnected }
         } else {
             CoroutineScope(Dispatchers.IO).launch {
@@ -84,7 +84,7 @@ class AndroidBluetoothController(
     }
 
     override fun startDiscovery() {
-        if(!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
         }
 
@@ -99,7 +99,7 @@ class AndroidBluetoothController(
     }
 
     override fun stopDiscovery() {
-        if(!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
         }
 
@@ -108,7 +108,7 @@ class AndroidBluetoothController(
 
     override fun startBluetoothServer(): Flow<ConnectionResult> {
         return flow {
-            if(!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
+            if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
                 throw SecurityException("No BLUETOOTH_CONNECT permission")
             }
 
@@ -118,10 +118,10 @@ class AndroidBluetoothController(
             )
 
             var shouldLoop = true
-            while(shouldLoop) {
+            while (shouldLoop) {
                 currentClientSocket = try {
                     currentServerSocket?.accept()
-                } catch(e: IOException) {
+                } catch (e: IOException) {
                     shouldLoop = false
                     null
                 }
@@ -147,7 +147,7 @@ class AndroidBluetoothController(
 
     override fun connectToDevice(device: BluetoothDeviceDomain): Flow<ConnectionResult> {
         return flow {
-            if(!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
+            if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
                 throw SecurityException("No BLUETOOTH_CONNECT permission")
             }
 
@@ -170,7 +170,7 @@ class AndroidBluetoothController(
                                 .map { ConnectionResult.TransferSucceeded(it) }
                         )
                     }
-                } catch(e: IOException) {
+                } catch (e: IOException) {
                     socket.close()
                     currentClientSocket = null
                     emit(ConnectionResult.Error("Connection was interrupted"))
@@ -182,11 +182,11 @@ class AndroidBluetoothController(
     }
 
     override suspend fun trySendMessage(message: String): BluetoothMessage? {
-        if(!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
             return null
         }
 
-        if(dataTransferService == null) {
+        if (dataTransferService == null) {
             return null
         }
 
@@ -215,7 +215,7 @@ class AndroidBluetoothController(
     }
 
     private fun updatePairedDevices() {
-        if(!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
             return
         }
         bluetoothAdapter
