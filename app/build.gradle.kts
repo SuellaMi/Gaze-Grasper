@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdk = 29
         targetSdk = 34
-        versionCode = 2
-        versionName = "0.2"
+        versionCode = 3
+        versionName = "0.3"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -30,11 +30,11 @@ android {
         jvmToolchain(17)
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -59,7 +59,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    val hiltVersion = "2.47"
+    val hiltVersion = "2.48"
     implementation("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")

@@ -21,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import uds.hci.gaze_grasper.presentation.components.ChatScreen
 import uds.hci.gaze_grasper.presentation.components.DeviceScreen
@@ -96,9 +95,7 @@ class BluetoothActivity : ComponentActivity() {
                     }
                 }
 
-                Surface(
-                    color = Color.Black
-                ) {
+                Surface {
                     when {
                         state.isConnecting -> {
                             Column(
