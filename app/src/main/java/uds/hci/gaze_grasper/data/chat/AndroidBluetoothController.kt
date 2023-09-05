@@ -21,14 +21,22 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
+/**
+ * Implements bluetooth controller.
+ * Combines all the relevant bluetooth logics.
+ * contain the feature of scan and connect to devices and the server as well.
+ */
 @SuppressLint("MissingPermission")
 class AndroidBluetoothController(
     private val context: Context
 ) : BluetoothController {
 
+    //Give a system service. A service provided from the android operating system.
     private val bluetoothManager by lazy {
         context.getSystemService(BluetoothManager::class.java)
     }
+    //It is the hardware module. contains relevant functionalities such as mac adress, name, but also
+    //provide a list of scanned devices as an example.
     private val bluetoothAdapter by lazy {
         bluetoothManager?.adapter
     }
