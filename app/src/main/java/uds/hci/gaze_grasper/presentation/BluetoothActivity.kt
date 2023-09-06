@@ -27,19 +27,33 @@ import uds.hci.gaze_grasper.presentation.components.DeviceScreen
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+
+/**
+ * Main Class where the UI aspects and general information were handled.
+ */
 @AndroidEntryPoint
 class BluetoothActivity : ComponentActivity() {
 
+    //Give a system service. A service provided from the android operating system.
+    //initialised by lazy
     private val bluetoothManager by lazy {
         applicationContext.getSystemService(BluetoothManager::class.java)
     }
+
+    //It is the hardware module. contains relevant functionalities such as mac adress, blutetooth name, but also
+    //provide a list of scanned devices as an example.
+    //initialised by lazy
     private val bluetoothAdapter by lazy {
         bluetoothManager?.adapter
     }
 
+    //Boolean which checks whether bluetooth is enabled. Initialised by lazy
     private val isBluetoothEnabled: Boolean
         get() = bluetoothAdapter?.isEnabled == true
 
+    //Main function which handles first the UI aspects via viewmodel and components. gets devicescreen
+    //by default as mainmenu structure if isnt connected with bluetooth device. otherwise Chatscreen or chatMessage.
+    //it handles also the permissions first
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -32,11 +32,13 @@ class AndroidBluetoothController(
 ) : BluetoothController {
 
     //Give a system service. A service provided from the android operating system.
+    //initialised by lazy
     private val bluetoothManager by lazy {
         context.getSystemService(BluetoothManager::class.java)
     }
-    //It is the hardware module. contains relevant functionalities such as mac adress, name, but also
+    //It is the hardware module. contains relevant functionalities such as mac adress, blutetooth name, but also
     //provide a list of scanned devices as an example.
+    //initialised by lazy
     private val bluetoothAdapter by lazy {
         bluetoothManager?.adapter
     }
@@ -47,10 +49,12 @@ class AndroidBluetoothController(
     override val isConnected: StateFlow<Boolean>
         get() = _isConnected.asStateFlow()
 
+    //List of scanned devices. Empty by default
     private val _scannedDevices = MutableStateFlow<List<BluetoothDeviceDomain>>(emptyList())
     override val scannedDevices: StateFlow<List<BluetoothDeviceDomain>>
         get() = _scannedDevices.asStateFlow()
 
+    //List of paired devices. Empty by default
     private val _pairedDevices = MutableStateFlow<List<BluetoothDeviceDomain>>(emptyList())
     override val pairedDevices: StateFlow<List<BluetoothDeviceDomain>>
         get() = _pairedDevices.asStateFlow()
@@ -59,6 +63,8 @@ class AndroidBluetoothController(
     override val errors: SharedFlow<String>
         get() = _errors.asSharedFlow()
 
+    //value of the found device with the callback of the device that was found.
+    //It adds the device to the list of the  found devices.
     private val foundDeviceReceiver = FoundDeviceReceiver { device ->
         _scannedDevices.update { devices ->
             val newDevice = device.toBluetoothDeviceDomain()
@@ -79,6 +85,7 @@ class AndroidBluetoothController(
     private var currentServerSocket: BluetoothServerSocket? = null
     private var currentClientSocket: BluetoothSocket? = null
 
+    //initialise the necessary aspects in the bluetooth controller. Including updating the paired devices.
     init {
         updatePairedDevices()
         context.registerReceiver(
@@ -91,6 +98,8 @@ class AndroidBluetoothController(
         )
     }
 
+
+    //It starts to scan of bluetooth devices in the close environment and gives the founded to the update.
     override fun startDiscovery() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
@@ -106,6 +115,7 @@ class AndroidBluetoothController(
         bluetoothAdapter?.startDiscovery()
     }
 
+    //It stops the discovery of bluetooth devices in the close environment.
     override fun stopDiscovery() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
@@ -216,12 +226,13 @@ class AndroidBluetoothController(
         currentServerSocket = null
     }
 
+    //It clears everything from our bluetoothcontroller.
     override fun release() {
         context.unregisterReceiver(foundDeviceReceiver)
         context.unregisterReceiver(bluetoothStateReceiver)
         closeConnection()
     }
-
+    // Updates always the paired devices which can be provided in the current moment
     private fun updatePairedDevices() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
             return
@@ -234,6 +245,9 @@ class AndroidBluetoothController(
             }
     }
 
+
+    //Helper function. It checks whether we have a certain permission or not.
+    // Returns a boolean whether we have the permission or not
     private fun hasPermission(permission: String): Boolean {
         return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }

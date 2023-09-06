@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+//Needed to provide the bluetoothcontroller in the viewmodel setup.
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {

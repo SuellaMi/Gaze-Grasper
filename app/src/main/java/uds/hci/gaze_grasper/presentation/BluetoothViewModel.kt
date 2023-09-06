@@ -11,11 +11,18 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+/**
+ * This class takes the information of the bluetoothcontroller and handles for the UI.
+ */
 @HiltViewModel
 class  BluetoothViewModel @Inject constructor(
     private val bluetoothController: BluetoothController
 ) : ViewModel() {
 
+    //Gives the state of the devices and its informations (including paired and scanned Devices).
+    //first line gives the intial state.
+    //Next lines gives the update of the states.
     private val _state = MutableStateFlow(BluetoothUiState())
     val state = combine(
         bluetoothController.scannedDevices,
@@ -83,10 +90,12 @@ class  BluetoothViewModel @Inject constructor(
         }
     }
 
+    //Starts scan from bluetoothcontroller
     fun startScan() {
         bluetoothController.startDiscovery()
     }
 
+    //Stops scan from bluetoothcontroller.
     fun stopScan() {
         bluetoothController.stopDiscovery()
     }

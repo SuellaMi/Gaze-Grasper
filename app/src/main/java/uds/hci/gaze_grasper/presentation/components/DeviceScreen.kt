@@ -14,6 +14,11 @@ import androidx.compose.ui.unit.sp
 import uds.hci.gaze_grasper.domain.chat.BluetoothDevice
 import uds.hci.gaze_grasper.presentation.BluetoothUiState
 
+/**
+ * The UI Look and Structure of our Mainmenu (or the UI called by default).
+ * Called from the BluetoothActivity function if the device isn't connected with a bluetooth device
+ * Structure by a row of buttons and a column of Scanned and paired devices (and its updated provided devices)
+ */
 @Composable
 fun DeviceScreen(
     state: BluetoothUiState,
