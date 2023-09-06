@@ -36,8 +36,11 @@ class  BluetoothViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
+    //Saves the connection state.
     private var deviceConnectionJob: Job? = null
 
+
+    //Initialise the current connection and error states.
     init {
         bluetoothController.isConnected.onEach { isConnected ->
             _state.update { it.copy(isConnected = isConnected) }
@@ -52,6 +55,7 @@ class  BluetoothViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    //Shows in UI that connects to a device. State will be saved in a job
     fun connectToDevice(device: BluetoothDeviceDomain) {
         _state.update { it.copy(isConnecting = true) }
         deviceConnectionJob = bluetoothController
@@ -59,6 +63,7 @@ class  BluetoothViewModel @Inject constructor(
             .listen()
     }
 
+    //Shows in UI the disconnection to device. Cancel Job.
     fun disconnectFromDevice() {
         deviceConnectionJob?.cancel()
         bluetoothController.closeConnection()
@@ -70,6 +75,7 @@ class  BluetoothViewModel @Inject constructor(
         }
     }
 
+    //Launches Server and shows the waiting for other devices
     fun waitForIncomingConnections() {
         _state.update { it.copy(isConnecting = true) }
         deviceConnectionJob = bluetoothController
@@ -100,6 +106,10 @@ class  BluetoothViewModel @Inject constructor(
         bluetoothController.stopDiscovery()
     }
 
+    //helper function.
+    // Establish a connection in the view model to our list.
+    //Needs in the client as well as server scenario.
+    //Returns a Job (which launches the observation)
     private fun Flow<ConnectionResult>.listen(): Job {
         return onEach { result ->
             when (result) {
@@ -144,6 +154,7 @@ class  BluetoothViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    //releases all resources.
     override fun onCleared() {
         super.onCleared()
         bluetoothController.release()

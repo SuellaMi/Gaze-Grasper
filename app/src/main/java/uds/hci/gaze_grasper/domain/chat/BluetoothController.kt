@@ -9,11 +9,13 @@ import kotlinx.coroutines.flow.StateFlow
  * contain the feature of scan and connect to devices and the server as well.
  */
 interface BluetoothController {
+    //all connection states
     val isConnected: StateFlow<Boolean>
     //all states of the scanned devices
     val scannedDevices: StateFlow<List<BluetoothDevice>>
     //all states of the paired devices
     val pairedDevices: StateFlow<List<BluetoothDevice>>
+    //all error states
     val errors: SharedFlow<String>
 
     //start the discovery in our environment
@@ -21,11 +23,18 @@ interface BluetoothController {
     //stop the discovery in our environment
     fun stopDiscovery()
 
+    //starts the bluetooth server, where devices can connect with.
+    // Returns a flow of Connectionresults (flow is a reactive data structure)
     fun startBluetoothServer(): Flow<ConnectionResult>
+
+    //Function to connect to a device that have launched a server.
+    //Returns a flow of connectionresults
     fun connectToDevice(device: BluetoothDevice): Flow<ConnectionResult>
+
 
     suspend fun trySendMessage(message: String): BluetoothMessage?
 
+    //Function that close the connection when someone disconnects
     fun closeConnection()
 
     //frees up all the memories and the resources to all devices

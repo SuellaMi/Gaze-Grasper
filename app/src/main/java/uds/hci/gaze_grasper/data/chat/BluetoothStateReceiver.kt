@@ -6,6 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 
+/**
+ * This class listens to state changes (e.g. when connection is successful or interrupted or disconnected).
+ * Will be used in the AndroidBluetoothController
+ */
 class BluetoothStateReceiver(
     private val onStateChanged: (isConnected: Boolean, BluetoothDevice) -> Unit
 ) : BroadcastReceiver() {

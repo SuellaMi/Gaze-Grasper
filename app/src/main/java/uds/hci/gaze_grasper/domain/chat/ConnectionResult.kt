@@ -1,5 +1,9 @@
 package uds.hci.gaze_grasper.domain.chat
 
+
+/**
+ * It defines the different types of connection results.
+ */
 sealed interface ConnectionResult {
     object ConnectionEstablished : ConnectionResult
     data class TransferSucceeded(val message: BluetoothMessage) : ConnectionResult
