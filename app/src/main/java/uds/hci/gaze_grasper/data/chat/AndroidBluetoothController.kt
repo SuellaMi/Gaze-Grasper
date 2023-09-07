@@ -135,6 +135,7 @@ class AndroidBluetoothController(
 
     //starts the bluetooth server, where devices can connect with.
     //Establish the connection to a bluetoothdevice.
+    //From there it is possible to exchange data via Bluetooth Data TransferService.
     //Returns a flow of Connectionresults (flow is a reactive data structure)
     override fun startBluetoothServer(): Flow<ConnectionResult> {
         return flow {
@@ -177,6 +178,7 @@ class AndroidBluetoothController(
 
     //Function to connect to a device that have launched a server.
     //Establish the connection to a bluetoothdevice with a server.
+    //From there it is possible to exchange data via Bluetooth Data TransferService.
     //Returns a flow of connectionresults
     override fun connectToDevice(device: BluetoothDeviceDomain): Flow<ConnectionResult> {
         return flow {
@@ -214,6 +216,9 @@ class AndroidBluetoothController(
         }.flowOn(Dispatchers.IO)
     }
 
+    // Function which actually send the message in the bluetoothcontroller.
+    // Triggers the data transfer service.
+    // Takes the message we want to send and returns the successful sended Bluetooth message to show in UI later
     override suspend fun trySendMessage(message: String): BluetoothMessage? {
         if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
             return null

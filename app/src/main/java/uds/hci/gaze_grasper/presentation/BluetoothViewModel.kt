@@ -20,9 +20,10 @@ class  BluetoothViewModel @Inject constructor(
     private val bluetoothController: BluetoothController
 ) : ViewModel() {
 
-    //Gives the state of the devices and its informations (including paired and scanned Devices).
-    //first line gives the intial state.
+    //Takes the state of the devices and its informations (including paired and scanned Devices).
+    //first line gives the initial state.
     //Next lines gives the update of the states.
+    //Besides, it takes state about the chat message. if its connected then take state of messages. otherwise empty
     private val _state = MutableStateFlow(BluetoothUiState())
     val state = combine(
         bluetoothController.scannedDevices,
@@ -83,6 +84,8 @@ class  BluetoothViewModel @Inject constructor(
             .listen()
     }
 
+    //Handles Sending message in our UI View model.
+    //Takes the message as string
     fun sendMessage(message: String) {
         viewModelScope.launch {
             val bluetoothMessage = bluetoothController.trySendMessage(message)
@@ -107,8 +110,9 @@ class  BluetoothViewModel @Inject constructor(
     }
 
     //helper function.
-    // Establish a connection in the view model to our list.
+    //Update the connection in the view model in our list.
     //Needs in the client as well as server scenario.
+    //Besides, updates the messages (it transfer succeeded).
     //Returns a Job (which launches the observation)
     private fun Flow<ConnectionResult>.listen(): Job {
         return onEach { result ->

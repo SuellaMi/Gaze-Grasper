@@ -22,6 +22,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import uds.hci.gaze_grasper.presentation.BluetoothUiState
 
+/**
+ * The UI structure and Look of the whole chatscreen. Including  the single chatmessages,
+ * a button to disconnect, textfield and a button for sending messages
+ */
 @Composable
 fun ChatScreen(
     state: BluetoothUiState,

@@ -52,7 +52,7 @@ class BluetoothActivity : ComponentActivity() {
         get() = bluetoothAdapter?.isEnabled == true
 
     //Main function which handles first the UI aspects via viewmodel and components. gets devicescreen
-    //by default as mainmenu structure if isnt connected with bluetooth device. otherwise Chatscreen or chatMessage.
+    //by default as mainmenu structure if isnt connected with bluetooth device. otherwise Chatscreen with chatMessages.
     //If it tries connecting (launches server) it shows progress bar.
     //it handles also the permissions first
     override fun onCreate(savedInstanceState: Bundle?) {

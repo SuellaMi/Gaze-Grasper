@@ -16,6 +16,10 @@ import androidx.compose.ui.unit.sp
 import uds.hci.gaze_grasper.domain.chat.BluetoothMessage
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 
+
+/**
+ * The UI structure and Look of a Single Chatmessage. Distinguishable between sender and client.
+ */
 @Composable
 fun ChatMessage(
     message: BluetoothMessage,
