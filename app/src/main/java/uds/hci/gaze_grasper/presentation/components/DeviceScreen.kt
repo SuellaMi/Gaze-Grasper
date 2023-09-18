@@ -1,25 +1,11 @@
 package uds.hci.gaze_grasper.presentation.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import uds.hci.gaze_grasper.domain.chat.BluetoothDevice
-import uds.hci.gaze_grasper.presentation.BluetoothUiState
-
 /**
  * The UI Look and Structure of our Mainmenu (or the UI called by default).
  * Called from the BluetoothActivity function if the device isn't connected with a bluetooth device
  * Structure by a row of buttons and a column of Scanned and paired devices (and its updated provided devices).
  */
-@Composable
+/*@Composable
 fun DeviceScreen(
     state: BluetoothUiState,
     onStartScan: () -> Unit,
@@ -102,4 +88,4 @@ fun BluetoothDeviceList(
             )
         }
     }
-}
+}*/

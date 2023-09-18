@@ -1,5 +1,9 @@
 package uds.hci.gaze_grasper.presentation
 
+
+
+
+
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -22,10 +26,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import uds.hci.gaze_grasper.presentation.components.ChatScreen
-import uds.hci.gaze_grasper.presentation.components.DeviceScreen
-import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 import dagger.hilt.android.AndroidEntryPoint
+import uds.hci.gaze_grasper.presentation.components.ChatScreen
+import uds.hci.gaze_grasper.presentation.components.MainScreen
+import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 
 
 /**
@@ -58,6 +62,8 @@ class BluetoothActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+
         val enableBluetoothLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { /* Not needed */ }
@@ -86,6 +92,7 @@ class BluetoothActivity : ComponentActivity() {
         }
 
         setContent {
+
             GazeGrasperTheme {
                 val viewModel = hiltViewModel<BluetoothViewModel>()
                 val state by viewModel.state.collectAsState()
@@ -132,13 +139,19 @@ class BluetoothActivity : ComponentActivity() {
                         }
 
                         else -> {
-                            DeviceScreen(
+                            MainScreen(state = state,
+                                onStartScan = viewModel::startScan,
+                                onStopScan = viewModel::stopScan,
+                                onDeviceClick = viewModel::connectToDevice,
+                                onStartServer = viewModel::waitForIncomingConnections)
+                            /*DeviceScreen(
+
                                 state = state,
                                 onStartScan = viewModel::startScan,
                                 onStopScan = viewModel::stopScan,
                                 onDeviceClick = viewModel::connectToDevice,
                                 onStartServer = viewModel::waitForIncomingConnections
-                            )
+                            )*/
                         }
                     }
                 }
@@ -146,3 +159,4 @@ class BluetoothActivity : ComponentActivity() {
         }
     }
 }
+
