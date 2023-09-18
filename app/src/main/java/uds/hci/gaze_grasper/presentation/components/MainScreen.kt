@@ -10,11 +10,13 @@ import com.google.accompanist.permissions.rememberPermissionState
 import uds.hci.gaze_grasper.domain.chat.BluetoothDevice
 import uds.hci.gaze_grasper.presentation.BluetoothUiState
 
-//import de.yanneckreiss.cameraxtutorial.ui.features.camera.no_permission.NoPermissionScreen
-//import de.yanneckreiss.cameraxtutorial.ui.features.camera.photo_capture.CameraScreen
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
+        /**
+         *Part of the CameraFeature. It handles the aspect whether Permission to the Camera is given.
+         * If its the case then go to the mainmenu. Otherwise, ask for permission
+         */
 fun MainScreen(state: BluetoothUiState,
     onStartScan: () -> Unit,
     onStopScan: () -> Unit,
@@ -34,6 +36,7 @@ fun MainScreen(state: BluetoothUiState,
     )
 }
 
+//Handles the aspect whether permission is given or not.
 @Composable
 private fun MainContent(
     hasPermission: Boolean,

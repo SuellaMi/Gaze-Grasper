@@ -4,6 +4,7 @@ package uds.hci.gaze_grasper.presentation.components
  * The UI Look and Structure of our Mainmenu (or the UI called by default).
  * Called from the BluetoothActivity function if the device isn't connected with a bluetooth device
  * Structure by a row of buttons and a column of Scanned and paired devices (and its updated provided devices).
+ * Old Feature, since Camera Feature wasn't included yet.
  */
 /*@Composable
 fun DeviceScreen(

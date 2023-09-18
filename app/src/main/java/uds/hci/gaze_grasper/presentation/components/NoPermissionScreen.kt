@@ -10,6 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
+/**
+ * The UI look and Structure of the case, if the camera permission is not given
+ */
 @Composable
 fun NoPermissionScreen(
     onRequestPermission: () -> Unit
@@ -20,6 +23,7 @@ fun NoPermissionScreen(
     )
 }
 
+//Content of the UI. Includes the text and a button for agree of camera.
 @Composable
 private fun NoPermissionContent(
     onRequestPermission: () -> Unit
@@ -36,6 +40,7 @@ private fun NoPermissionContent(
     }
 }
 
+//Preview of the app
 @Preview
 @Composable
 private fun Preview_NoPermissionContent() {

@@ -31,6 +31,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import uds.hci.gaze_grasper.domain.chat.BluetoothDevice
 import uds.hci.gaze_grasper.presentation.BluetoothUiState
 
+/**
+ * The UI Look and Structure of our Mainmenu (or the UI called by default).
+ * Called from the BluetoothActivity function if the device isn't connected with a bluetooth device
+ * Structure by a row of buttons and a column of Scanned and paired devices (and its updated provided devices).
+ * Besides, it has a camera background by using android view.
+ */
 @Composable
 fun CameraScreen(
     state: BluetoothUiState,
@@ -38,9 +44,10 @@ fun CameraScreen(
     onStopScan: () -> Unit,
     onStartServer: () -> Unit,
     onDeviceClick: (BluetoothDevice) -> Unit) {
-    CameraContent(state,onStartScan,onStopScan,onStartServer,onDeviceClick)
+    CameraContent(state, onStartScan, onStopScan, onStartServer, onDeviceClick)
 }
 
+//Look and Structure of the UI
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun CameraContent(
@@ -51,17 +58,19 @@ private fun CameraContent(
     onDeviceClick: (BluetoothDevice) -> Unit){
 
 
-    val context= LocalContext.current
-    val lifeCycleOwner= LocalLifecycleOwner.current
-    val cameraController= remember{ LifecycleCameraController(context)}
+    val context = LocalContext.current
+    val lifeCycleOwner = LocalLifecycleOwner.current
+    val cameraController = remember { LifecycleCameraController(context) }
     Scaffold(modifier = Modifier.fillMaxSize()) {paddingValues:PaddingValues ->
         AndroidView(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            factory = { context->PreviewView(context).apply {
-                    layoutParams=LinearLayout.LayoutParams(MATCH_PARENT,MATCH_PARENT)
+            factory = { context ->
+                PreviewView(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
                     setBackgroundColor(Color.BLACK)
-                    scaleType=PreviewView.ScaleType.FILL_START
-                }.also { previewView ->  previewView.controller=cameraController
+                    scaleType = PreviewView.ScaleType.FILL_START
+                }.also { previewView ->
+                    previewView.controller = cameraController
                     cameraController.bindToLifecycle(lifeCycleOwner)}
             })
 
