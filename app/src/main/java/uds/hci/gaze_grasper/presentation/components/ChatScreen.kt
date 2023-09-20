@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package uds.hci.gaze_grasper.presentation.components
 
 import androidx.compose.foundation.layout.*
@@ -23,9 +21,10 @@ import androidx.compose.ui.unit.dp
 import uds.hci.gaze_grasper.presentation.BluetoothUiState
 
 /**
- * The UI structure and Look of the whole chatscreen. Including  the single chatmessages,
- * a button to disconnect, textfield and a button for sending messages
+ * The UI structure and Look of the whole chat screen. Including  the single chat messages,
+ * a button to disconnect, text field and a button for sending messages
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatScreen(
     state: BluetoothUiState,
@@ -73,7 +72,7 @@ fun ChatScreen(
                         message = message,
                         modifier = Modifier
                             .align(
-                                if(message.isFromLocalUser) Alignment.End else Alignment.Start
+                                if (message.isFromLocalUser) Alignment.End else Alignment.Start
                             )
                     )
                 }

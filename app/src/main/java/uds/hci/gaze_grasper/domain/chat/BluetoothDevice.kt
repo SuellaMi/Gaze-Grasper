@@ -5,7 +5,7 @@ typealias BluetoothDeviceDomain = BluetoothDevice
 /**
  * Represents a certain bluetooth device
  */
-data class  BluetoothDevice(
+data class BluetoothDevice(
     val name: String?,
     val address: String
 )

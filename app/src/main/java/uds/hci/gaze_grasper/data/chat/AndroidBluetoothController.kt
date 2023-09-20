@@ -31,42 +31,43 @@ class AndroidBluetoothController(
     private val context: Context
 ) : BluetoothController {
 
-    //Give a system service. A service provided from the android operating system.
-    //initialised by lazy
+    // Give a system service. A service provided from the android operating system.
+    // initialised by lazy
     private val bluetoothManager by lazy {
         context.getSystemService(BluetoothManager::class.java)
     }
-    //It is the hardware module. contains relevant functionalities such as mac adress, blutetooth name, but also
-    //provide a list of scanned devices as an example.
-    //initialised by lazy
+
+    // It is the hardware module. contains relevant functionalities such as mac adress, blutetooth name, but also
+    // provide a list of scanned devices as an example.
+    // initialised by lazy
     private val bluetoothAdapter by lazy {
         bluetoothManager?.adapter
     }
 
     private var dataTransferService: BluetoothDataTransferService? = null
 
-    //List of connection states. False by default.
+    // List of connection states. False by default.
     private val _isConnected = MutableStateFlow(false)
     override val isConnected: StateFlow<Boolean>
         get() = _isConnected.asStateFlow()
 
-    //List of scanned devices. Empty by default
+    // List of scanned devices. Empty by default
     private val _scannedDevices = MutableStateFlow<List<BluetoothDeviceDomain>>(emptyList())
     override val scannedDevices: StateFlow<List<BluetoothDeviceDomain>>
         get() = _scannedDevices.asStateFlow()
 
-    //List of paired devices. Empty by default
+    // List of paired devices. Empty by default
     private val _pairedDevices = MutableStateFlow<List<BluetoothDeviceDomain>>(emptyList())
     override val pairedDevices: StateFlow<List<BluetoothDeviceDomain>>
         get() = _pairedDevices.asStateFlow()
 
-    //List of error states thath is used.
+    // List of error states thath is used.
     private val _errors = MutableSharedFlow<String>()
     override val errors: SharedFlow<String>
         get() = _errors.asSharedFlow()
 
-    //value of the found device with the callback of the device that was found.
-    //It adds the device to the list of the  found devices.
+    // value of the found device with the callback of the device that was found.
+    // It adds the device to the list of the  found devices.
     private val foundDeviceReceiver = FoundDeviceReceiver { device ->
         _scannedDevices.update { devices ->
             val newDevice = device.toBluetoothDeviceDomain()
@@ -74,8 +75,8 @@ class AndroidBluetoothController(
         }
     }
 
-    //Value which takes care about state changes of bluetoothconnections.
-    //Instantiation of BluetoothStateReceiver. Updates boolean states.
+    // Value which takes care about state changes of bluetoothconnections.
+    // Instantiation of BluetoothStateReceiver. Updates boolean states.
     private val bluetoothStateReceiver = BluetoothStateReceiver { isConnected, bluetoothDevice ->
         if (bluetoothAdapter?.bondedDevices?.contains(bluetoothDevice) == true) {
             _isConnected.update { isConnected }
@@ -86,13 +87,13 @@ class AndroidBluetoothController(
         }
     }
 
-    //Saves the value of socket for the server (and its status)
+    // Saves the value of socket for the server (and its status)
     private var currentServerSocket: BluetoothServerSocket? = null
 
-    //Saves the socket for the client (and its status
+    // Saves the socket for the client (and its status
     private var currentClientSocket: BluetoothSocket? = null
 
-    //initialise the necessary aspects in the bluetooth controller.
+    // initialise the necessary aspects in the bluetooth controller.
     // Including updating the paired devices and the current
     // bluetooth state.
     init {
@@ -108,7 +109,7 @@ class AndroidBluetoothController(
     }
 
 
-    //It starts to scan of bluetooth devices in the close environment and gives the founded to the update.
+    // It starts to scan of bluetooth devices in the close environment and gives the founded to the update.
     override fun startDiscovery() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
@@ -124,7 +125,7 @@ class AndroidBluetoothController(
         bluetoothAdapter?.startDiscovery()
     }
 
-    //It stops the discovery of bluetooth devices in the close environment.
+    // It stops the discovery of bluetooth devices in the close environment.
     override fun stopDiscovery() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
@@ -133,10 +134,10 @@ class AndroidBluetoothController(
         bluetoothAdapter?.cancelDiscovery()
     }
 
-    //starts the bluetooth server, where devices can connect with.
-    //Establish the connection to a bluetoothdevice.
-    //From there it is possible to exchange data via Bluetooth Data TransferService.
-    //Returns a flow of Connectionresults (flow is a reactive data structure)
+    // starts the bluetooth server, where devices can connect with.
+    // Establish the connection to a bluetoothdevice.
+    // From there it is possible to exchange data via Bluetooth Data TransferService.
+    // Returns a flow of Connectionresults (flow is a reactive data structure)
     override fun startBluetoothServer(): Flow<ConnectionResult> {
         return flow {
             if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -176,10 +177,10 @@ class AndroidBluetoothController(
         }.flowOn(Dispatchers.IO)
     }
 
-    //Function to connect to a device that have launched a server.
-    //Establish the connection to a bluetoothdevice with a server.
-    //From there it is possible to exchange data via Bluetooth Data TransferService.
-    //Returns a flow of connectionresults
+    // Function to connect to a device that have launched a server.
+    // Establish the connection to a bluetoothdevice with a server.
+    // From there it is possible to exchange data via Bluetooth Data TransferService.
+    // Returns a flow of connectionresults
     override fun connectToDevice(device: BluetoothDeviceDomain): Flow<ConnectionResult> {
         return flow {
             if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -239,7 +240,7 @@ class AndroidBluetoothController(
         return bluetoothMessage
     }
 
-    //Function that close the connection when someone disconnects
+    // Function that close the connection when someone disconnects
     override fun closeConnection() {
         currentClientSocket?.close()
         currentServerSocket?.close()
@@ -247,12 +248,13 @@ class AndroidBluetoothController(
         currentServerSocket = null
     }
 
-    //It clears everything from our bluetoothcontroller.
+    // It clears everything from our bluetoothcontroller.
     override fun release() {
         context.unregisterReceiver(foundDeviceReceiver)
         context.unregisterReceiver(bluetoothStateReceiver)
         closeConnection()
     }
+
     // Updates always the paired devices which can be provided in the current moment
     private fun updatePairedDevices() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -267,13 +269,13 @@ class AndroidBluetoothController(
     }
 
 
-    //Helper function. It checks whether we have a certain permission or not.
+    // Helper function. It checks whether we have a certain permission or not.
     // Returns a boolean whether we have the permission or not
     private fun hasPermission(permission: String): Boolean {
         return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    //Definition of the UUID, which is needed for the connection ( both devices need the same ID).
+    // Definition of the UUID, which is needed for the connection ( both devices need the same ID).
     // Will be used in StartBluetoothServer
     companion object {
         const val SERVICE_UUID = "27b7d1da-08c7-4505-a6d1-2459987e5e2d"

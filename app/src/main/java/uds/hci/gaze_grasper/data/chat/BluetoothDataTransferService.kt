@@ -14,12 +14,12 @@ import java.io.IOException
  * Handles the functionality of sending and receiving messages in the class
  */
 class BluetoothDataTransferService(
-    //Active connection to an other device
+    // Active connection to an other device
     private val socket: BluetoothSocket
 ) {
 
-    //Takes a look whether it gets messages.
-    //Returns a flow of those Messages
+    // Takes a look whether it gets messages.
+    // Returns a flow of those Messages
     fun listenForIncomingMessages(): Flow<BluetoothMessage> {
         return flow {
             if (!socket.isConnected) {
@@ -44,7 +44,7 @@ class BluetoothDataTransferService(
         }.flowOn(Dispatchers.IO)
     }
 
-     // Function that send Messages to the other device.
+    // Function that send Messages to the other device.
     // takes the message for sending and returns a boolean, whether sending succeeded.
     suspend fun sendMessage(bytes: ByteArray): Boolean {
         return withContext(Dispatchers.IO) {

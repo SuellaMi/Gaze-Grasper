@@ -15,8 +15,8 @@ class FoundDeviceReceiver(
 ) : BroadcastReceiver() {
 
 
-    //The function of the class, which will be triggered when a device was found.
-    //if it founds one, then it will get the necessary informations.
+    // The function of the class, which will be triggered when a device was found.
+    // if it founds one, then it will get the necessary informations.
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             BluetoothDevice.ACTION_FOUND -> {

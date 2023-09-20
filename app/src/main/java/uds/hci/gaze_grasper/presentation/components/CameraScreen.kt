@@ -43,11 +43,12 @@ fun CameraScreen(
     onStartScan: () -> Unit,
     onStopScan: () -> Unit,
     onStartServer: () -> Unit,
-    onDeviceClick: (BluetoothDevice) -> Unit) {
+    onDeviceClick: (BluetoothDevice) -> Unit
+) {
     CameraContent(state, onStartScan, onStopScan, onStartServer, onDeviceClick)
 }
 
-//Look and Structure of the UI
+// Look and Structure of the UI
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun CameraContent(
@@ -55,15 +56,18 @@ private fun CameraContent(
     onStartScan: () -> Unit,
     onStopScan: () -> Unit,
     onStartServer: () -> Unit,
-    onDeviceClick: (BluetoothDevice) -> Unit){
+    onDeviceClick: (BluetoothDevice) -> Unit
+) {
 
 
     val context = LocalContext.current
     val lifeCycleOwner = LocalLifecycleOwner.current
     val cameraController = remember { LifecycleCameraController(context) }
-    Scaffold(modifier = Modifier.fillMaxSize()) {paddingValues:PaddingValues ->
+    Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues: PaddingValues ->
         AndroidView(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             factory = { context ->
                 PreviewView(context).apply {
                     layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -71,7 +75,8 @@ private fun CameraContent(
                     scaleType = PreviewView.ScaleType.FILL_START
                 }.also { previewView ->
                     previewView.controller = cameraController
-                    cameraController.bindToLifecycle(lifeCycleOwner)}
+                    cameraController.bindToLifecycle(lifeCycleOwner)
+                }
             })
 
     }
@@ -152,6 +157,7 @@ fun BluetoothDeviceList(
         }
     }
 }
+
 /*@Preview
 @Composable
 private fun Preview_CameraContent() {

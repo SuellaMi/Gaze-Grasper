@@ -23,7 +23,7 @@ fun NoPermissionScreen(
     )
 }
 
-//Content of the UI. Includes the text and a button for agree of camera.
+// Content of the UI. Includes the text and a button for agree of camera.
 @Composable
 private fun NoPermissionContent(
     onRequestPermission: () -> Unit
@@ -40,7 +40,7 @@ private fun NoPermissionContent(
     }
 }
 
-//Preview of the app
+// Preview of the app
 @Preview
 @Composable
 private fun Preview_NoPermissionContent() {
