@@ -1,9 +1,5 @@
 package uds.hci.gaze_grasper.presentation
 
-
-
-
-
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -31,38 +27,34 @@ import uds.hci.gaze_grasper.presentation.components.ChatScreen
 import uds.hci.gaze_grasper.presentation.components.MainScreen
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 
-
 /**
  * Main Class where the UI aspects and general information were handled.
  */
 @AndroidEntryPoint
 class BluetoothActivity : ComponentActivity() {
-
-    //Give a system service. A service provided from the android operating system.
-    //initialised by lazy
+    // Give a system service. A service provided from the android operating system.
+    // initialised by lazy
     private val bluetoothManager by lazy {
         applicationContext.getSystemService(BluetoothManager::class.java)
     }
 
-    //It is the hardware module. contains relevant functionalities such as mac adress, blutetooth name, but also
-    //provide a list of scanned devices as an example.
-    //initialised by lazy
+    // It is the hardware module. contains relevant functionalities such as mac address, bluetooth name, but also
+    // provide a list of scanned devices as an example.
+    // initialised by lazy
     private val bluetoothAdapter by lazy {
         bluetoothManager?.adapter
     }
 
-    //Boolean which checks whether bluetooth is enabled. Initialised by lazy
+    // Boolean which checks whether bluetooth is enabled. Initialised by lazy
     private val isBluetoothEnabled: Boolean
         get() = bluetoothAdapter?.isEnabled == true
 
-    //Main function which handles first the UI aspects via viewmodel and components. gets devicescreen
-    //by default as mainmenu structure if isnt connected with bluetooth device. otherwise Chatscreen with chatMessages.
-    //If it tries connecting (launches server) it shows progress bar.
-    //it handles also the permissions first
+    // Main function which handles first the UI aspects via viewmodel and components. gets device screen
+    // by default as main menu structure if isn't connected with bluetooth device. otherwise Chatscreen with chatMessages.
+    // If it tries connecting (launches server) it shows progress bar.
+    // it handles also the permissions first
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         val enableBluetoothLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -75,24 +67,33 @@ class BluetoothActivity : ComponentActivity() {
                 perms[Manifest.permission.BLUETOOTH_CONNECT] == true
             } else true
 
+            println("bluetooth enabled: $isBluetoothEnabled")
             if (canEnableBluetooth && !isBluetoothEnabled) {
+                println("Launching!")
                 enableBluetoothLauncher.launch(
                     Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 )
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            permissionLauncher.launch(
+
+        permissionLauncher.launch(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 arrayOf(
                     Manifest.permission.BLUETOOTH_SCAN,
                     Manifest.permission.BLUETOOTH_CONNECT,
                 )
-            )
-        }
+            } else {
+                arrayOf(
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+            }
+        )
 
         setContent {
-
             GazeGrasperTheme {
                 val viewModel = hiltViewModel<BluetoothViewModel>()
                 val state by viewModel.state.collectAsState()
@@ -139,13 +140,14 @@ class BluetoothActivity : ComponentActivity() {
                         }
 
                         else -> {
-                            MainScreen(state = state,
+                            MainScreen(
+                                state = state,
                                 onStartScan = viewModel::startScan,
                                 onStopScan = viewModel::stopScan,
                                 onDeviceClick = viewModel::connectToDevice,
-                                onStartServer = viewModel::waitForIncomingConnections)
+                                onStartServer = viewModel::waitForIncomingConnections
+                            )
                             /*DeviceScreen(
-
                                 state = state,
                                 onStartScan = viewModel::startScan,
                                 onStopScan = viewModel::stopScan,
@@ -159,4 +161,3 @@ class BluetoothActivity : ComponentActivity() {
         }
     }
 }
-
