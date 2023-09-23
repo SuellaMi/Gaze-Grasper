@@ -7,5 +7,6 @@ package uds.hci.gaze_grasper.domain.chat
 sealed interface ConnectionResult {
     data object ConnectionEstablished : ConnectionResult
     data class TransferSucceeded(val message: BluetoothMessage) : ConnectionResult
+    data class TransferVideoSucceeded(val video: BluetoothVideo) : ConnectionResult
     data class Error(val message: String) : ConnectionResult
 }

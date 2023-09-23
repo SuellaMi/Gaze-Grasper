@@ -1,6 +1,7 @@
 package uds.hci.gaze_grasper.data.chat
 
 import uds.hci.gaze_grasper.domain.chat.BluetoothMessage
+import uds.hci.gaze_grasper.domain.chat.BluetoothVideo
 
 
 /**
@@ -13,6 +14,17 @@ fun String.toBluetoothMessage(isFromLocalUser: Boolean): BluetoothMessage {
         message = message,
         senderName = name,
         isFromLocalUser = isFromLocalUser
+    )
+}
+
+fun toBluetoothVideo(     bufferSize: Int,
+                                 buffer: ByteArray,
+                                 bytesRead: Int): BluetoothVideo {
+
+    return BluetoothVideo(
+         bufferSize=bufferSize,
+     buffer=buffer,
+     bytesRead=bytesRead
     )
 }
 

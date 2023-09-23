@@ -2,13 +2,21 @@ package uds.hci.gaze_grasper.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import uds.hci.gaze_grasper.domain.chat.BluetoothController
 import uds.hci.gaze_grasper.domain.chat.BluetoothDeviceDomain
 import uds.hci.gaze_grasper.domain.chat.ConnectionResult
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -33,7 +41,8 @@ class BluetoothViewModel @Inject constructor(
         state.copy(
             scannedDevices = scannedDevices,
             pairedDevices = pairedDevices,
-            messages = if (state.isConnected) state.messages else emptyList()
+            messages = if (state.isConnected) state.messages else emptyList(),
+            video=if (state.isConnected) state.video else emptyList()
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
@@ -113,7 +122,8 @@ class BluetoothViewModel @Inject constructor(
     // Update the connection in the view model in our list.
     // Needs in the client as well as server scenario.
     // Besides, updates the messages (it transfer succeeded).
-    // Returns a Job (which launches the observation)
+    // Returns a Job (which launches the observation).
+    //Besides, update the status of the Videooutput later.
     private fun Flow<ConnectionResult>.listen(): Job {
         return onEach { result ->
             when (result) {
@@ -141,6 +151,15 @@ class BluetoothViewModel @Inject constructor(
                             isConnected = false,
                             isConnecting = false,
                             errorMessage = result.message
+                        )
+                    }
+                }
+
+                is ConnectionResult.TransferVideoSucceeded -> {
+                    _state.update {
+                        it.copy(
+
+                            video= listOf(result.video)
                         )
                     }
                 }

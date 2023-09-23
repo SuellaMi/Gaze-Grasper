@@ -10,14 +10,14 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import uds.hci.gaze_grasper.domain.chat.BluetoothController
-import uds.hci.gaze_grasper.domain.chat.BluetoothDeviceDomain
-import uds.hci.gaze_grasper.domain.chat.BluetoothMessage
-import uds.hci.gaze_grasper.domain.chat.ConnectionResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import uds.hci.gaze_grasper.domain.chat.BluetoothController
+import uds.hci.gaze_grasper.domain.chat.BluetoothDeviceDomain
+import uds.hci.gaze_grasper.domain.chat.BluetoothMessage
+import uds.hci.gaze_grasper.domain.chat.ConnectionResult
 import java.io.IOException
 import java.util.*
 
@@ -137,6 +137,7 @@ class AndroidBluetoothController(
     // starts the bluetooth server, where devices can connect with.
     // Establish the connection to a bluetoothdevice.
     // From there it is possible to exchange data via Bluetooth Data TransferService.
+    // Data Transfer Service exchange also Video Data.
     // Returns a flow of Connectionresults (flow is a reactive data structure)
     override fun startBluetoothServer(): Flow<ConnectionResult> {
         return flow {
@@ -170,6 +171,7 @@ class AndroidBluetoothController(
                                 ConnectionResult.TransferSucceeded(it)
                             }
                     )
+                    emitAll(service.listenForIncomingVideoMessages().map{ConnectionResult.TransferVideoSucceeded(it)})
                 }
             }
         }.onCompletion {
@@ -180,6 +182,7 @@ class AndroidBluetoothController(
     // Function to connect to a device that have launched a server.
     // Establish the connection to a bluetoothdevice with a server.
     // From there it is possible to exchange data via Bluetooth Data TransferService.
+    // Data Transfer Service exchange also Video Data.
     // Returns a flow of connectionresults
     override fun connectToDevice(device: BluetoothDeviceDomain): Flow<ConnectionResult> {
         return flow {
@@ -205,6 +208,7 @@ class AndroidBluetoothController(
                             it.listenForIncomingMessages()
                                 .map { ConnectionResult.TransferSucceeded(it) }
                         )
+                        emitAll(it.listenForIncomingVideoMessages().map{ConnectionResult.TransferVideoSucceeded(it)})
                     }
                 } catch (e: IOException) {
                     socket.close()
