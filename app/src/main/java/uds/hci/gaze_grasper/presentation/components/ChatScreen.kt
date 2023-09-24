@@ -180,7 +180,6 @@ fun BluetoothVideoBackground(videoFrame: ByteArray) {
 // Video Background.
 fun processVideoFrame(videoFrame: ByteArray): ImageBitmap {
     // Implementiere die Verarbeitung des Videoframes und die Rückgabe als ImageBitmap
-    // Beispiel: Hier wird ein leeres Bild zurückgegeben
     val bitmap = BitmapFactory.decodeByteArray(videoFrame, 0, videoFrame.size)
     return bitmap.asImageBitmap()
 }
