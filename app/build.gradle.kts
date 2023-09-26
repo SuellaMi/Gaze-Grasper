@@ -58,6 +58,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    // SeeSo Gaze Tracker
+    implementation(files("libs/gazetracker-release-3.1.1.aar"))
+    implementation(files("libs/libgaze-release-3.1.1.aar"))
+
     val hiltVersion = "2.48"
     implementation("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
     implementation("com.google.dagger:hilt-android:$hiltVersion")
