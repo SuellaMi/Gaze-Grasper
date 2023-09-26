@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GazeGrasper">
         <activity
-            android:name=".presentation.BluetoothActivity"
+            android:name=".BluetoothActivity"
             android:exported="true"
             android:theme="@style/Theme.GazeGrasper">
             <intent-filter>

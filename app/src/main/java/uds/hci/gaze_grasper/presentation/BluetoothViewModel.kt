@@ -19,7 +19,6 @@ import uds.hci.gaze_grasper.domain.chat.BluetoothDeviceDomain
 import uds.hci.gaze_grasper.domain.chat.ConnectionResult
 import javax.inject.Inject
 
-
 /**
  * This class takes the information of the bluetoothcontroller and handles for the UI.
  */
@@ -48,7 +47,6 @@ class BluetoothViewModel @Inject constructor(
 
     // Saves the connection state.
     private var deviceConnectionJob: Job? = null
-
 
     // Initialise the current connection and error states.
     init {
@@ -165,7 +163,7 @@ class BluetoothViewModel @Inject constructor(
                 }
             }
         }
-            .catch { throwable ->
+            .catch {
                 bluetoothController.closeConnection()
                 _state.update {
                     it.copy(
@@ -177,7 +175,7 @@ class BluetoothViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    // releases all resources.
+    // releases all resources
     override fun onCleared() {
         super.onCleared()
         bluetoothController.release()

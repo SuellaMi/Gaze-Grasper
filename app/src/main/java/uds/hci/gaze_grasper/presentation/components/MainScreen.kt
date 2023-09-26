@@ -22,7 +22,6 @@ fun MainScreen(
     onStartServer: () -> Unit,
     onDeviceClick: (BluetoothDevice) -> Unit
 ) {
-
     val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     MainContent(
@@ -54,12 +53,3 @@ private fun MainContent(
         NoPermissionScreen(onRequestPermission)
     }
 }
-
-/*@Preview
-@Composable
-private fun Preview_MainContent() {
-    MainContent(
-        hasPermission = true,
-        onRequestPermission = {},
-    )
-}*/

@@ -28,7 +28,6 @@ import java.util.*
  */
 @SuppressLint("MissingPermission")
 class AndroidBluetoothController(private val context: Context) : BluetoothController {
-
     // Give a system service. A service provided from the android operating system.
     // initialised by lazy
     private val bluetoothManager by lazy {

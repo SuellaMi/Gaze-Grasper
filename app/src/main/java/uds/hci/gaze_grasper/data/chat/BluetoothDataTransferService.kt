@@ -8,8 +8,12 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import uds.hci.gaze_grasper.domain.chat.BluetoothMessage
 import uds.hci.gaze_grasper.domain.chat.BluetoothVideo
-import uds.hci.gaze_grasper.domain.chat.TransferFailedException
 import java.io.IOException
+
+/**
+ * Error Message which says that data reading failed
+ */
+class TransferFailedException : IOException("Reading incoming data failed")
 
 /**
  * Handles the functionality of sending and receiving messages in the class
@@ -45,7 +49,7 @@ class BluetoothDataTransferService(
         }.flowOn(Dispatchers.IO)
     }
 
-    //Takes the information for the Video or Frames as ByteArray. Returns a Flow of necessary informations of it.
+    // Takes the information for the Video or Frames as ByteArray. Returns a Flow of necessary information of it.
     fun listenForIncomingVideoMessages(): Flow<BluetoothVideo> {
         return flow {
             if (!socket.isConnected) {
@@ -59,10 +63,10 @@ class BluetoothDataTransferService(
                     throw TransferFailedException()
                 }
 
-                val buffer2=ByteArray(1024)
-                buffer2.set(buffer2.size-1,byteCount.toByte())
+                val buffer2 = ByteArray(1024)
+                buffer2[buffer2.size - 1] = byteCount.toByte()
                 emit(
-                   toBluetoothVideo(
+                    toBluetoothVideo(
                         1024,
                         buffer2,
                         byteCount

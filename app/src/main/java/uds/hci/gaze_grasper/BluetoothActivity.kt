@@ -1,10 +1,9 @@
-package uds.hci.gaze_grasper.presentation
+package uds.hci.gaze_grasper
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -23,7 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import uds.hci.gaze_grasper.presentation.components.ChatScreen
+import uds.hci.gaze_grasper.presentation.BluetoothViewModel
+import uds.hci.gaze_grasper.presentation.components.BluetoothVideoBackground
 import uds.hci.gaze_grasper.presentation.components.MainScreen
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 
@@ -122,11 +122,7 @@ class BluetoothActivity : ComponentActivity() {
                         }
 
                         state.isConnected -> {
-                            ChatScreen(
-                                state = state,
-                                onDisconnect = viewModel::disconnectFromDevice,
-                                onSendMessage = viewModel::sendMessage
-                            )
+                            BluetoothVideoBackground(state)
                         }
 
                         else -> {
@@ -137,13 +133,6 @@ class BluetoothActivity : ComponentActivity() {
                                 onDeviceClick = viewModel::connectToDevice,
                                 onStartServer = viewModel::waitForIncomingConnections
                             )
-                            /*DeviceScreen(
-                                state = state,
-                                onStartScan = viewModel::startScan,
-                                onStopScan = viewModel::stopScan,
-                                onDeviceClick = viewModel::connectToDevice,
-                                onStartServer = viewModel::waitForIncomingConnections
-                            )*/
                         }
                     }
                 }

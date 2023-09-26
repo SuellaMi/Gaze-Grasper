@@ -1,6 +1,5 @@
 package uds.hci.gaze_grasper.presentation.components
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
@@ -45,21 +44,6 @@ fun CameraScreen(
     onStartServer: () -> Unit,
     onDeviceClick: (BluetoothDevice) -> Unit
 ) {
-    CameraContent(state, onStartScan, onStopScan, onStartServer, onDeviceClick)
-}
-
-// Look and Structure of the UI
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-private fun CameraContent(
-    state: BluetoothUiState,
-    onStartScan: () -> Unit,
-    onStopScan: () -> Unit,
-    onStartServer: () -> Unit,
-    onDeviceClick: (BluetoothDevice) -> Unit
-) {
-
-
     val context = LocalContext.current
     val lifeCycleOwner = LocalLifecycleOwner.current
     val cameraController = remember { LifecycleCameraController(context) }
@@ -78,13 +62,9 @@ private fun CameraContent(
                     cameraController.bindToLifecycle(lifeCycleOwner)
                 }
             })
-
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         BluetoothDeviceList(
             pairedDevices = state.pairedDevices,
             scannedDevices = state.scannedDevices,
@@ -157,9 +137,3 @@ fun BluetoothDeviceList(
         }
     }
 }
-
-/*@Preview
-@Composable
-private fun Preview_CameraContent() {
-    CameraContent()
-}*/
