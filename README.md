@@ -9,7 +9,7 @@ The project requires Android Studio 2022.3 (Giraffe) or later. It should automat
 In order to build the project from the command line (e.g. for debugging purposes), make sure your `JAVA_HOME` system environment variable is set (required Java version >= 17) and initialize the Gradle CLI by running
 
 ```bash
-./gradlew wrapper --gradle-version 8.2.1
+./gradlew wrapper --gradle-version 8.3
 ```
 
 in the project root.

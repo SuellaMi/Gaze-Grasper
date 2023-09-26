@@ -27,9 +27,7 @@ import java.util.*
  * contain the feature of scan and connect to devices and the server as well.
  */
 @SuppressLint("MissingPermission")
-class AndroidBluetoothController(
-    private val context: Context
-) : BluetoothController {
+class AndroidBluetoothController(private val context: Context) : BluetoothController {
 
     // Give a system service. A service provided from the android operating system.
     // initialised by lazy
@@ -279,7 +277,7 @@ class AndroidBluetoothController(
         return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    // Definition of the UUID, which is needed for the connection ( both devices need the same ID).
+    // Definition of the UUID, which is needed for the connection (both devices need the same ID).
     // Will be used in StartBluetoothServer
     companion object {
         const val SERVICE_UUID = "27b7d1da-08c7-4505-a6d1-2459987e5e2d"
