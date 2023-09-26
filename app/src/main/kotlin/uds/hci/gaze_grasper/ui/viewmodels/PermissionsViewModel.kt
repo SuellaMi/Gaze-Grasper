@@ -2,14 +2,19 @@ package uds.hci.gaze_grasper.ui.viewmodels
 
 import android.Manifest
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 /**
- * Saves a list of requested but not granted permissions, to later show a [PermissionDialog] for each.
+ * Saves a list of requested but not granted permissions, to later show a PermissionDialog for each.
+ * Also stores whether all permissions have been granted, which controls the display of the MissingPermissionScreen.
  */
 class PermissionsViewModel : ViewModel() {
     val permissionDialogQueue = mutableStateListOf<String>()
+    var allPermissionsGranted by mutableStateOf(false)
 
     fun dismissDialog() {
         Log.i(

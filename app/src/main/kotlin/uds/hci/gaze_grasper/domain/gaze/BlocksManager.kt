@@ -10,7 +10,7 @@ import uds.hci.gaze_grasper.dto.gaze.PixyBlock
 
 class BlocksManager(private val resolution: Pair<Int, Int>, private val toast: Toast) {
     private var dataTransferService: BluetoothDataTransferService? = null
-    private var byteArray:ByteArray?=null
+    private var byteArray: ByteArray? = null
 
     val blocks = mutableStateListOf<DisplayablePixyBlock>()
     var gazedBlockId = -1
@@ -24,6 +24,7 @@ class BlocksManager(private val resolution: Pair<Int, Int>, private val toast: T
     }
 
     fun onGaze(gazeCoords: GazeCoordinates) {
+        gazedBlockId = -1
         blocks.forEach { block ->
             block.onGaze(gazeCoords)
             if (block.isGazeWithin) {
@@ -33,18 +34,18 @@ class BlocksManager(private val resolution: Pair<Int, Int>, private val toast: T
     }
 
     fun onBlockSelection(id: Int) {
+        if (id == -1) {
+            return
+        }
+
         Log.i("BlocksManager", "PixyBlock id:$id selected!")
         toast.setText("Pixy Block id:$id selected!")
         toast.show()
 
-        //Send Stuff done
-        byteArray?.set(0,id.toByte())
+        byteArray?.set(0, id.toByte())
         byteArray?.let { dataTransferService?.sendMessageConstant(it) }
-
-
     }
 
     // Function that send Messages to the other device.
     // takes the message for sending and returns a boolean, whether sending succeeded.
-
 }

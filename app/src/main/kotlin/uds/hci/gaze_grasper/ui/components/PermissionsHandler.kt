@@ -5,21 +5,30 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,7 +50,7 @@ fun PermissionsHandler(shouldShowRequestPermissionRationale: (String) -> Boolean
     val viewModel = viewModel<PermissionsViewModel>()
 
     // Provides access to Bluetooth adapter data such as MAC address, name, list of paired devices, etc.
-    val bluetoothAdapter by lazy {
+    val bluetoothAdapter = remember {
         context.getSystemService(BluetoothManager::class.java).adapter
     }
 
@@ -55,7 +64,7 @@ fun PermissionsHandler(shouldShowRequestPermissionRationale: (String) -> Boolean
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { map ->
             permissionsToRequest.forEach { permission ->
-                Log.d("PermissionsHandler", "Should add $permission: ${map[permission] == false}")
+                Log.i("PermissionsHandler", "Should add $permission: ${map[permission] == false}")
                 viewModel.onPermissionResult(permission, map[permission] == false)
             }
 
@@ -63,6 +72,10 @@ fun PermissionsHandler(shouldShowRequestPermissionRationale: (String) -> Boolean
                 enableBluetoothLauncher.launch(
                     Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 )
+            }
+
+            if (map.values.all { it }) {
+                viewModel.allPermissionsGranted = true
             }
         }
     )
@@ -72,13 +85,17 @@ fun PermissionsHandler(shouldShowRequestPermissionRationale: (String) -> Boolean
     DisposableEffect(key1 = lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                Log.d("PermissionsHandler", "Launching permission launcher")
+                Log.i("PermissionsHandler", "Launching permission launcher")
                 multiplePermissionResultLauncher.launch(permissionsToRequest)
             }
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    if (!viewModel.allPermissionsGranted) {
+        MissingPermissionScreen { multiplePermissionResultLauncher.launch(permissionsToRequest) }
     }
 
     // Displays a PermissionDialog for each declined permission
@@ -101,15 +118,24 @@ fun PermissionsHandler(shouldShowRequestPermissionRationale: (String) -> Boolean
             onGoToSettings = { openAppSettings(context) }
         )
     }
+}
 
-    // if (permissionsToRequest.all {
-    //         ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-    //     }
-    // ) {
-    //     Text("All granted")
-    // } else {
-    //     Text("Not all granted")
-    // }
+@Composable
+private fun MissingPermissionScreen(onRequestPermission: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Not all permissions, which are required for this app to function, have been granted yet.")
+        Spacer(Modifier.height(8.dp))
+        Button(onClick = onRequestPermission) {
+            Text("Grant permissions")
+        }
+    }
 }
 
 /**

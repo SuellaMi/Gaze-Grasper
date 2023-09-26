@@ -161,14 +161,13 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
                     val service = BluetoothDataTransferService(it)
                     dataTransferService = service
 
-                    emitAll(
-                        service
-                            .listenForIncomingMessages()
-                            .map {
-                                ConnectionResult.TransferSucceeded(it)
-                            }
-                    )
-                    emitAll(service.listenForIncomingVideoMessages().map{ConnectionResult.TransferVideoSucceeded(it)})
+                    emitAll(service.listenForIncomingMessages().map {
+                        ConnectionResult.TransferSucceeded(it)
+                    })
+
+                    emitAll(service.listenForIncomingVideoMessages().map {
+                        ConnectionResult.TransferVideoSucceeded(it)
+                    })
                 }
             }
         }.onCompletion {
@@ -205,7 +204,7 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
                             it.listenForIncomingMessages()
                                 .map { ConnectionResult.TransferSucceeded(it) }
                         )
-                        emitAll(it.listenForIncomingVideoMessages().map{ConnectionResult.TransferVideoSucceeded(it)})
+                        emitAll(it.listenForIncomingVideoMessages().map { ConnectionResult.TransferVideoSucceeded(it) })
                     }
                 } catch (e: IOException) {
                     socket.close()

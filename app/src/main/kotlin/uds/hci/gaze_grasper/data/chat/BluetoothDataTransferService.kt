@@ -22,7 +22,6 @@ class BluetoothDataTransferService(
     // Active connection to an other device
     private val socket: BluetoothSocket
 ) {
-
     // Takes a look whether it gets messages.
     // Returns a flow of those Messages
     fun listenForIncomingMessages(): Flow<BluetoothMessage> {
@@ -91,12 +90,11 @@ class BluetoothDataTransferService(
         }
     }
 
-    fun sendMessageConstant(bytes: ByteArray){
+    fun sendMessageConstant(bytes: ByteArray) {
         try {
             socket.outputStream.write(bytes)
         } catch (e: IOException) {
             e.printStackTrace()
-
         }
     }
 }

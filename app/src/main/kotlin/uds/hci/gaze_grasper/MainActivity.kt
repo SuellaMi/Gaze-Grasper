@@ -64,8 +64,6 @@ class MainActivity : ComponentActivity() {
         // TODO: fix ui, wire up bluetooth
         setContent {
             GazeGrasperTheme {
-                PermissionsHandler(::shouldShowRequestPermissionRationale)
-
                 val viewModel = hiltViewModel<BluetoothViewModel>()
                 val state by viewModel.state.collectAsState()
 
@@ -117,6 +115,8 @@ class MainActivity : ComponentActivity() {
                 }
 
                 GazeTrackingScreen(gazeTrackerManager = gazeTrackerManager, blocksManager = blocksManager)
+
+                PermissionsHandler(::shouldShowRequestPermissionRationale)
             }
         }
     }
