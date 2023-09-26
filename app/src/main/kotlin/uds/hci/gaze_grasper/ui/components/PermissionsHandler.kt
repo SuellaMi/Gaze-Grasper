@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
@@ -18,6 +19,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -99,6 +101,15 @@ fun PermissionsHandler(shouldShowRequestPermissionRationale: (String) -> Boolean
             onGoToSettings = { openAppSettings(context) }
         )
     }
+
+    // if (permissionsToRequest.all {
+    //         ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    //     }
+    // ) {
+    //     Text("All granted")
+    // } else {
+    //     Text("Not all granted")
+    // }
 }
 
 /**
@@ -117,7 +128,7 @@ private fun openAppSettings(context: Context) {
  * Offers to request it again after first decline, and to open settings after second decline.
  */
 @Composable
-fun PermissionDialog(
+private fun PermissionDialog(
     permission: String,
     isPermanentlyDeclined: Boolean,
     onDismiss: () -> Unit,

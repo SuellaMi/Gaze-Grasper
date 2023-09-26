@@ -16,9 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import uds.hci.gaze_grasper.ui.components.BluetoothConnectScreen
 import uds.hci.gaze_grasper.ui.viewmodels.BluetoothViewModel
 import uds.hci.gaze_grasper.ui.components.BluetoothVideoBackground
-import uds.hci.gaze_grasper.ui.components.MainScreen
 import uds.hci.gaze_grasper.ui.components.PermissionsHandler
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     else -> {
-                        MainScreen(
+                        BluetoothConnectScreen(
                             state = state,
                             onStartScan = viewModel::startScan,
                             onStopScan = viewModel::stopScan,
