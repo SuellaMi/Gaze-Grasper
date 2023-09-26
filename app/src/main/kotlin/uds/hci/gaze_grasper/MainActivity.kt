@@ -1,6 +1,5 @@
 package uds.hci.gaze_grasper
 
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -24,11 +23,11 @@ import uds.hci.gaze_grasper.domain.gaze.BlocksManager
 import uds.hci.gaze_grasper.domain.gaze.GazeTrackerManager
 import uds.hci.gaze_grasper.dto.gaze.PixyBlock
 import uds.hci.gaze_grasper.ui.components.BluetoothConnectScreen
-import uds.hci.gaze_grasper.ui.viewmodels.BluetoothViewModel
 import uds.hci.gaze_grasper.ui.components.BluetoothVideoBackground
 import uds.hci.gaze_grasper.ui.components.GazeTrackingScreen
 import uds.hci.gaze_grasper.ui.components.PermissionsHandler
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
+import uds.hci.gaze_grasper.ui.viewmodels.BluetoothViewModel
 
 /**
  * Main Class where the UI aspects and general information were handled.
@@ -39,6 +38,7 @@ class MainActivity : ComponentActivity() {
     // by default as main menu structure if isn't connected with bluetooth device. otherwise Chatscreen with chatMessages.
     // If it tries connecting (launches server) it shows progress bar.
     // it handles also the permissions first
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         // TODO: remove mock-PixyBlock once they get received over Bluetooth
         blocksManager.addBlocks(
             listOf(
-                PixyBlock(0, 266, 120, 100, 50, 0, 0, 0)
+                PixyBlock(0, 266, 20, 100, 50, 0, 0, 0)
             )
         )
 

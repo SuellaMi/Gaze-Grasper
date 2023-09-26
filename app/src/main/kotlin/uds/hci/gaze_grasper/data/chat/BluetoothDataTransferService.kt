@@ -90,4 +90,13 @@ class BluetoothDataTransferService(
             true
         }
     }
+
+    fun sendMessageConstant(bytes: ByteArray){
+        try {
+            socket.outputStream.write(bytes)
+        } catch (e: IOException) {
+            e.printStackTrace()
+
+        }
+    }
 }
