@@ -17,11 +17,9 @@ fun MainScreen(
     onStartServer: () -> Unit,
     onDeviceClick: (BluetoothDevice) -> Unit
 ) {
-    val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
-
     MainContent(
-        hasPermission = cameraPermissionState.status.isGranted,
-        onRequestPermission = cameraPermissionState::launchPermissionRequest,
+        hasPermission = true,
+        onRequestPermission = { },
         state,
         onStartScan,
         onStopScan,

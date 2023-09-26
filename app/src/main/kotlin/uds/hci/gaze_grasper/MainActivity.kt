@@ -1,14 +1,9 @@
 package uds.hci.gaze_grasper
 
-import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import uds.hci.gaze_grasper.ui.viewmodels.BluetoothViewModel
 import uds.hci.gaze_grasper.ui.components.BluetoothVideoBackground
 import uds.hci.gaze_grasper.ui.components.MainScreen
+import uds.hci.gaze_grasper.ui.components.PermissionsHandler
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 
 /**
@@ -31,23 +27,6 @@ import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    // Give a system service. A service provided from the android operating system.
-    // initialised by lazy
-    private val bluetoothManager by lazy {
-        applicationContext.getSystemService(BluetoothManager::class.java)
-    }
-
-    // It is the hardware module. contains relevant functionalities such as mac address, bluetooth name, but also
-    // provide a list of scanned devices as an example.
-    // initialised by lazy
-    private val bluetoothAdapter by lazy {
-        bluetoothManager?.adapter
-    }
-
-    // Boolean which checks whether bluetooth is enabled. Initialised by lazy
-    private val isBluetoothEnabled: Boolean
-        get() = bluetoothAdapter?.isEnabled == true
-
     // Main function which handles first the UI aspects via viewmodel and components. gets device screen
     // by default as main menu structure if isn't connected with bluetooth device. otherwise Chatscreen with chatMessages.
     // If it tries connecting (launches server) it shows progress bar.
@@ -55,34 +34,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val enableBluetoothLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { /* Not needed */ }
-
-        val permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { perms ->
-            val canEnableBluetooth =
-                perms[Manifest.permission.BLUETOOTH_CONNECT] == true
-
-            println("bluetooth enabled: $isBluetoothEnabled")
-            if (canEnableBluetooth && !isBluetoothEnabled) {
-                println("Launching!")
-                enableBluetoothLauncher.launch(
-                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                )
-            }
-        }
-
-        permissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-            )
-        )
-
         setContent {
             GazeGrasperTheme {
+                PermissionsHandler(::shouldShowRequestPermissionRationale)
+
                 val viewModel = hiltViewModel<BluetoothViewModel>()
                 val state by viewModel.state.collectAsState()
 
