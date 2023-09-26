@@ -1,4 +1,4 @@
-package uds.hci.gaze_grasper.presentation
+package uds.hci.gaze_grasper.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import uds.hci.gaze_grasper.domain.chat.BluetoothController
 import uds.hci.gaze_grasper.domain.chat.BluetoothDeviceDomain
 import uds.hci.gaze_grasper.domain.chat.ConnectionResult
+import uds.hci.gaze_grasper.ui.BluetoothUiState
 import javax.inject.Inject
 
 /**
@@ -121,7 +122,7 @@ class BluetoothViewModel @Inject constructor(
     // Needs in the client as well as server scenario.
     // Besides, updates the messages (it transfer succeeded).
     // Returns a Job (which launches the observation).
-    //Besides, update the status of the Videooutput later.
+    // Besides, update the status of the Videooutput later.
     private fun Flow<ConnectionResult>.listen(): Job {
         return onEach { result ->
             when (result) {
@@ -156,8 +157,7 @@ class BluetoothViewModel @Inject constructor(
                 is ConnectionResult.TransferVideoSucceeded -> {
                     _state.update {
                         it.copy(
-
-                            video= listOf(result.video)
+                            video = listOf(result.video)
                         )
                     }
                 }

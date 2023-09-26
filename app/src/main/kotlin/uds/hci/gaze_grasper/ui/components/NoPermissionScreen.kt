@@ -1,4 +1,4 @@
-package uds.hci.gaze_grasper.presentation.components
+package uds.hci.gaze_grasper.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

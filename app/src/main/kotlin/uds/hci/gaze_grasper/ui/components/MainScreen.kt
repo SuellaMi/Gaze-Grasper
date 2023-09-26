@@ -1,19 +1,14 @@
-package uds.hci.gaze_grasper.presentation.components
+package uds.hci.gaze_grasper.ui.components
 
 import android.Manifest
 import androidx.compose.runtime.Composable
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import uds.hci.gaze_grasper.domain.chat.BluetoothDevice
-import uds.hci.gaze_grasper.presentation.BluetoothUiState
+import uds.hci.gaze_grasper.ui.BluetoothUiState
 
 /**
  * Part of the CameraFeature. It handles the aspect whether Permission to the Camera is given.
  * If its the case then go to the mainmenu. Otherwise, ask for permission
  */
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MainScreen(
     state: BluetoothUiState,
@@ -46,7 +41,6 @@ private fun MainContent(
     onStartServer: () -> Unit,
     onDeviceClick: (BluetoothDevice) -> Unit
 ) {
-
     if (hasPermission) {
         CameraScreen(state, onStartScan, onStopScan, onStartServer, onDeviceClick)
     } else {

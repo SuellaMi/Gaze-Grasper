@@ -82,9 +82,6 @@ dependencies {
     implementation("androidx.camera:camera-view:$cameraVersion")
     implementation("androidx.camera:camera-extensions:$cameraVersion")
 
-    //// ACCOMPANIST ////
-    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
-
     // Dependency Injection:
     // Koin base
     implementation("io.insert-koin:koin-core:3.5.0")

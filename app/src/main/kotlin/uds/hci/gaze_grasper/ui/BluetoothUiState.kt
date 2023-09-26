@@ -1,4 +1,4 @@
-package uds.hci.gaze_grasper.presentation
+package uds.hci.gaze_grasper.ui
 
 import uds.hci.gaze_grasper.domain.chat.BluetoothDevice
 import uds.hci.gaze_grasper.domain.chat.BluetoothMessage

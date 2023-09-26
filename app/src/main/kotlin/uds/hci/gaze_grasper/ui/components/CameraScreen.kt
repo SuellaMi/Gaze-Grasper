@@ -1,4 +1,4 @@
-package uds.hci.gaze_grasper.presentation.components
+package uds.hci.gaze_grasper.ui.components
 
 import android.graphics.Color
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -28,11 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import uds.hci.gaze_grasper.domain.chat.BluetoothDevice
-import uds.hci.gaze_grasper.presentation.BluetoothUiState
+import uds.hci.gaze_grasper.ui.BluetoothUiState
 
 /**
  * The UI Look and Structure of our Mainmenu (or the UI called by default).
- * Called from the BluetoothActivity function if the device isn't connected with a bluetooth device
+ * Called from the MainActivity function if the device isn't connected with a bluetooth device
  * Structure by a row of buttons and a column of Scanned and paired devices (and its updated provided devices).
  * Besides, it has a camera background by using android view.
  */

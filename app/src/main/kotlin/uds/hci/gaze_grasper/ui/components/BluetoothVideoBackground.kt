@@ -1,4 +1,4 @@
-package uds.hci.gaze_grasper.presentation.components
+package uds.hci.gaze_grasper.ui.components
 
 import android.graphics.BitmapFactory
 import android.widget.ImageView
@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.viewinterop.AndroidView
-import uds.hci.gaze_grasper.presentation.BluetoothUiState
+import uds.hci.gaze_grasper.ui.BluetoothUiState
 
 //Function, which creates the video background by using each frame. It creates the Frame
 //as Bitmap by using the sended ByteArray and use it as Video Background

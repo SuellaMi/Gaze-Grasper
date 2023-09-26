@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,16 +21,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import uds.hci.gaze_grasper.presentation.BluetoothViewModel
-import uds.hci.gaze_grasper.presentation.components.BluetoothVideoBackground
-import uds.hci.gaze_grasper.presentation.components.MainScreen
+import uds.hci.gaze_grasper.ui.viewmodels.BluetoothViewModel
+import uds.hci.gaze_grasper.ui.components.BluetoothVideoBackground
+import uds.hci.gaze_grasper.ui.components.MainScreen
 import uds.hci.gaze_grasper.ui.theme.GazeGrasperTheme
 
 /**
  * Main Class where the UI aspects and general information were handled.
  */
 @AndroidEntryPoint
-class BluetoothActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     // Give a system service. A service provided from the android operating system.
     // initialised by lazy
     private val bluetoothManager by lazy {
@@ -75,7 +74,6 @@ class BluetoothActivity : ComponentActivity() {
             }
         }
 
-
         permissionLauncher.launch(
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
@@ -108,32 +106,30 @@ class BluetoothActivity : ComponentActivity() {
                     }
                 }
 
-                Surface {
-                    when {
-                        state.isConnecting -> {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                CircularProgressIndicator()
-                                Text(text = "Connecting...")
-                            }
+                when {
+                    state.isConnecting -> {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator()
+                            Text(text = "Connecting...")
                         }
+                    }
 
-                        state.isConnected -> {
-                            BluetoothVideoBackground(state)
-                        }
+                    state.isConnected -> {
+                        BluetoothVideoBackground(state)
+                    }
 
-                        else -> {
-                            MainScreen(
-                                state = state,
-                                onStartScan = viewModel::startScan,
-                                onStopScan = viewModel::stopScan,
-                                onDeviceClick = viewModel::connectToDevice,
-                                onStartServer = viewModel::waitForIncomingConnections
-                            )
-                        }
+                    else -> {
+                        MainScreen(
+                            state = state,
+                            onStartScan = viewModel::startScan,
+                            onStopScan = viewModel::stopScan,
+                            onDeviceClick = viewModel::connectToDevice,
+                            onStartServer = viewModel::waitForIncomingConnections
+                        )
                     }
                 }
             }
