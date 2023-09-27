@@ -96,7 +96,7 @@ fun BluetoothDeviceList(
         }
         items(pairedDevices) { device ->
             Text(
-                text = device.name ?: "(No name)",
+                text = device.name ?: device.address,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick(device) }
@@ -114,7 +114,7 @@ fun BluetoothDeviceList(
         }
         items(scannedDevices) { device ->
             Text(
-                text = device.name ?: "(No name)",
+                text = device.name ?: device.address,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick(device) }

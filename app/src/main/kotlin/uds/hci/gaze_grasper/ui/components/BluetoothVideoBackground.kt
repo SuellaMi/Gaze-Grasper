@@ -41,7 +41,7 @@ fun BluetoothVideoBackground(state: BluetoothUiState) {
 
 // Function which decode the Byte Array into a Bitmap. Returns a Bitmap for the
 // Video Background.
-fun processVideoFrame(videoFrame: ByteArray): ImageBitmap {
+private fun processVideoFrame(videoFrame: ByteArray): ImageBitmap {
     // Implementiere die Verarbeitung des Videoframes und die Rückgabe als ImageBitmap
     val bitmap = BitmapFactory.decodeByteArray(videoFrame, 0, videoFrame.size)
     return bitmap.asImageBitmap()

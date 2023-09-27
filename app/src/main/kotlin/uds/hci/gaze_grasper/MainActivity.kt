@@ -19,6 +19,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import uds.hci.gaze_grasper.data.chat.AndroidBluetoothController
+import uds.hci.gaze_grasper.di.AppModule
 import uds.hci.gaze_grasper.domain.gaze.BlocksManager
 import uds.hci.gaze_grasper.domain.gaze.GazeTrackerManager
 import uds.hci.gaze_grasper.dto.gaze.PixyBlock
@@ -51,7 +53,12 @@ class MainActivity : ComponentActivity() {
         val screenHeight = windowManager.currentWindowMetrics.bounds.height()
 
         val toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
-        val blocksManager = BlocksManager(screenWidth to screenHeight, toast)
+        val bluetoothController = AppModule.provideBluetoothController(applicationContext)
+        val blocksManager = BlocksManager(
+            screenWidth to screenHeight,
+            toast,
+            bluetoothController as AndroidBluetoothController
+        )
         val gazeTrackerManager = GazeTrackerManager(applicationContext, blocksManager)
 
         // TODO: remove mock-PixyBlock once they get received over Bluetooth

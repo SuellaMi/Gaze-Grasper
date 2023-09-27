@@ -28,10 +28,12 @@ class BluetoothViewModel @Inject constructor(
     private val bluetoothController: BluetoothController
 ) : ViewModel() {
 
-    // Takes the state of the devices and its informations (including paired and scanned Devices).
-    // first line gives the initial state.
-    // Next lines gives the update of the states.
-    // Besides, it takes state about the chat message. if its connected then take state of messages. otherwise empty
+    /**
+     * Takes the state of the devices and its informations (including paired and scanned Devices).
+     * first line gives the initial state.
+     * Next lines gives the update of the states.
+     * Besides, it takes state about the chat message. if its connected then take state of messages. otherwise empty
+     */
     private val _state = MutableStateFlow(BluetoothUiState())
     val state = combine(
         bluetoothController.scannedDevices,
@@ -42,11 +44,13 @@ class BluetoothViewModel @Inject constructor(
             scannedDevices = scannedDevices,
             pairedDevices = pairedDevices,
             messages = if (state.isConnected) state.messages else emptyList(),
-            video=if (state.isConnected) state.video else emptyList()
+            video = if (state.isConnected) state.video else emptyList()
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
-    // Saves the connection state.
+    /**
+     * Saves the connection state.
+     */
     private var deviceConnectionJob: Job? = null
 
     // Initialise the current connection and error states.
@@ -64,7 +68,9 @@ class BluetoothViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    // Shows in UI that connects to a device. State will be saved in a job
+    /**
+     * Shows in UI that connects to a device. State will be saved in a job
+     */
     fun connectToDevice(device: BluetoothDeviceDomain) {
         _state.update { it.copy(isConnecting = true) }
         deviceConnectionJob = bluetoothController
@@ -72,7 +78,9 @@ class BluetoothViewModel @Inject constructor(
             .listen()
     }
 
-    // Shows in UI the disconnection to device. Cancel Job.
+    /**
+     * Shows in UI the disconnection to device. Cancel Job.
+     */
     fun disconnectFromDevice() {
         deviceConnectionJob?.cancel()
         bluetoothController.closeConnection()
@@ -84,7 +92,9 @@ class BluetoothViewModel @Inject constructor(
         }
     }
 
-    // Launches Server and shows the waiting for other devices
+    /**
+     * Launches Server and shows the waiting for other devices
+     */
     fun waitForIncomingConnections() {
         _state.update { it.copy(isConnecting = true) }
         deviceConnectionJob = bluetoothController
@@ -92,11 +102,13 @@ class BluetoothViewModel @Inject constructor(
             .listen()
     }
 
-    // Handles Sending message in our UI View model.
-    // Takes the message as string
+    /**
+     * Handles Sending message in our UI View model.
+     * Takes the message as string
+     */
     fun sendMessage(message: String) {
         viewModelScope.launch {
-            val bluetoothMessage = bluetoothController.trySendMessage(message)
+            val bluetoothMessage = bluetoothController.sendMessage(message)
             if (bluetoothMessage != null) {
                 _state.update {
                     it.copy(
@@ -107,22 +119,28 @@ class BluetoothViewModel @Inject constructor(
         }
     }
 
-    // Starts scan from bluetoothcontroller
+    /**
+     * Starts scan from bluetoothcontroller
+     */
     fun startScan() {
         bluetoothController.startDiscovery()
     }
 
-    // Stops scan from bluetoothcontroller.
+    /**
+     * Stops scan from bluetoothcontroller.
+     */
     fun stopScan() {
         bluetoothController.stopDiscovery()
     }
 
-    // helper function.
-    // Update the connection in the view model in our list.
-    // Needs in the client as well as server scenario.
-    // Besides, updates the messages (it transfer succeeded).
-    // Returns a Job (which launches the observation).
-    // Besides, update the status of the Videooutput later.
+    /**
+     * Helper function.
+     * Updates the connection in the view model in our list.
+     * Needed in the client as well as server scenario.
+     * Besides, updates the messages (if transfer succeeded).
+     * Returns a Job (which launches the observation).
+     * Also updates the status of the Videooutput later.
+     */
     private fun Flow<ConnectionResult>.listen(): Job {
         return onEach { result ->
             when (result) {
@@ -175,7 +193,9 @@ class BluetoothViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    // releases all resources
+    /**
+     * Releases all resources
+     */
     override fun onCleared() {
         super.onCleared()
         bluetoothController.release()

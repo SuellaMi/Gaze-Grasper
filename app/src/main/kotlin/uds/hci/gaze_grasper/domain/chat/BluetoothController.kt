@@ -35,10 +35,9 @@ interface BluetoothController {
     // Returns a flow of connectionresults
     fun connectToDevice(device: BluetoothDevice): Flow<ConnectionResult>
 
-
     // Function which actually send the message in the bluetoothcontroller.
     // Triggers the data transfer service
-    suspend fun trySendMessage(message: String): BluetoothMessage?
+    suspend fun sendMessage(message: String): BluetoothMessage?
 
     // Function that close the connection when someone disconnects
     fun closeConnection()

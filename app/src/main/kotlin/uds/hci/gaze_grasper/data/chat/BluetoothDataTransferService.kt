@@ -22,8 +22,10 @@ class BluetoothDataTransferService(
     // Active connection to an other device
     private val socket: BluetoothSocket
 ) {
-    // Takes a look whether it gets messages.
-    // Returns a flow of those Messages
+    /**
+     * Takes a look whether it gets messages.
+     * Returns a flow of those Messages
+     */
     fun listenForIncomingMessages(): Flow<BluetoothMessage> {
         return flow {
             if (!socket.isConnected) {
@@ -48,7 +50,9 @@ class BluetoothDataTransferService(
         }.flowOn(Dispatchers.IO)
     }
 
-    // Takes the information for the Video or Frames as ByteArray. Returns a Flow of necessary information of it.
+    /**
+     * Takes the information for the Video or Frames as ByteArray. Returns a Flow of necessary information of
+     */
     fun listenForIncomingVideoMessages(): Flow<BluetoothVideo> {
         return flow {
             if (!socket.isConnected) {
@@ -75,9 +79,11 @@ class BluetoothDataTransferService(
         }.flowOn(Dispatchers.IO)
     }
 
-    // Function that send Messages to the other device.
-    // takes the message for sending and returns a boolean, whether sending succeeded.
-    suspend fun sendMessage(bytes: ByteArray): Boolean {
+    /**
+     * Function that send Messages to the other device.
+     * takes the message for sending and returns a boolean, whether sending succeeded.
+     */
+    suspend fun trySendMessage(bytes: ByteArray): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 socket.outputStream.write(bytes)
@@ -87,14 +93,6 @@ class BluetoothDataTransferService(
             }
 
             true
-        }
-    }
-
-    fun sendMessageConstant(bytes: ByteArray) {
-        try {
-            socket.outputStream.write(bytes)
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
     }
 }

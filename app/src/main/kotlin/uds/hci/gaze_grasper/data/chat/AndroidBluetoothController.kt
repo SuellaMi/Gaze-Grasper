@@ -10,8 +10,11 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.provider.Settings.Global
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uds.hci.gaze_grasper.domain.chat.BluetoothController
@@ -63,8 +66,10 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
     override val errors: SharedFlow<String>
         get() = _errors.asSharedFlow()
 
-    // value of the found device with the callback of the device that was found.
-    // It adds the device to the list of the  found devices.
+    /**
+     * value of the found device with the callback of the device that was found.
+     * It adds the device to the list of the  found devices.
+     */
     private val foundDeviceReceiver = FoundDeviceReceiver { device ->
         _scannedDevices.update { devices ->
             val newDevice = device.toBluetoothDeviceDomain()
@@ -72,8 +77,10 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
         }
     }
 
-    // Value which takes care about state changes of bluetoothconnections.
-    // Instantiation of BluetoothStateReceiver. Updates boolean states.
+    /**
+     * Value which takes care about state changes of bluetoothconnections.
+     * Instantiation of BluetoothStateReceiver. Updates boolean states.
+     */
     private val bluetoothStateReceiver = BluetoothStateReceiver { isConnected, bluetoothDevice ->
         if (bluetoothAdapter?.bondedDevices?.contains(bluetoothDevice) == true) {
             _isConnected.update { isConnected }
@@ -84,10 +91,14 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
         }
     }
 
-    // Saves the value of socket for the server (and its status)
+    /**
+     * Saves the value of socket for the server (and its status)
+     */
     private var currentServerSocket: BluetoothServerSocket? = null
 
-    // Saves the socket for the client (and its status
+    /**
+     * Saves the socket for the client (and its status
+     */
     private var currentClientSocket: BluetoothSocket? = null
 
     // initialise the necessary aspects in the bluetooth controller.
@@ -106,7 +117,9 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
     }
 
 
-    // It starts to scan of bluetooth devices in the close environment and gives the founded to the update.
+    /**
+     * It starts to scan of bluetooth devices in the close environment and gives the founded to the update.
+     */
     override fun startDiscovery() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
@@ -122,7 +135,9 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
         bluetoothAdapter?.startDiscovery()
     }
 
-    // It stops the discovery of bluetooth devices in the close environment.
+    /**
+     * It stops the discovery of bluetooth devices in the close environment.
+     */
     override fun stopDiscovery() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
@@ -131,11 +146,13 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
         bluetoothAdapter?.cancelDiscovery()
     }
 
-    // starts the bluetooth server, where devices can connect with.
-    // Establish the connection to a bluetoothdevice.
-    // From there it is possible to exchange data via Bluetooth Data TransferService.
-    // Data Transfer Service exchange also Video Data.
-    // Returns a flow of Connectionresults (flow is a reactive data structure)
+    /**
+     * Starts the bluetooth server, where devices can connect with.
+     * Establish the connection to a bluetoothdevice.
+     * From there it is possible to exchange data via Bluetooth Data TransferService.
+     * Data Transfer Service exchange also Video Data.
+     * Returns a flow of Connectionresults (flow is a reactive data structure)
+     */
     override fun startBluetoothServer(): Flow<ConnectionResult> {
         return flow {
             if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -175,11 +192,12 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
         }.flowOn(Dispatchers.IO)
     }
 
-    // Function to connect to a device that have launched a server.
-    // Establish the connection to a bluetoothdevice with a server.
-    // From there it is possible to exchange data via Bluetooth Data TransferService.
-    // Data Transfer Service exchange also Video Data.
-    // Returns a flow of connectionresults
+    /**
+     * Function to connect to a device that have launched a server.
+     * Establish the connection to a bluetoothdevice with a server.
+     * From there it is possible to exchange data via Bluetooth Data TransferService.
+     * Data Transfer Service exchange also Video Data.
+     */
     override fun connectToDevice(device: BluetoothDeviceDomain): Flow<ConnectionResult> {
         return flow {
             if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -200,11 +218,12 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
 
                     BluetoothDataTransferService(socket).also {
                         dataTransferService = it
-                        emitAll(
-                            it.listenForIncomingMessages()
-                                .map { ConnectionResult.TransferSucceeded(it) }
-                        )
-                        emitAll(it.listenForIncomingVideoMessages().map { ConnectionResult.TransferVideoSucceeded(it) })
+                        emitAll(it.listenForIncomingMessages().map {
+                            ConnectionResult.TransferSucceeded(it)
+                        })
+                        emitAll(it.listenForIncomingVideoMessages().map {
+                            ConnectionResult.TransferVideoSucceeded(it)
+                        })
                     }
                 } catch (e: IOException) {
                     socket.close()
@@ -217,15 +236,13 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
         }.flowOn(Dispatchers.IO)
     }
 
-    // Function which actually send the message in the bluetoothcontroller.
-    // Triggers the data transfer service.
-    // Takes the message we want to send and returns the successful sended Bluetooth message to show in UI later
-    override suspend fun trySendMessage(message: String): BluetoothMessage? {
-        if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
-            return null
-        }
-
-        if (dataTransferService == null) {
+    /**
+     * Function which actually send the message in the bluetoothcontroller.
+     * Triggers the data transfer service.
+     * Takes the message we want to send and returns the successful sended Bluetooth message to show in UI later
+     */
+    override suspend fun sendMessage(message: String): BluetoothMessage? {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT) || dataTransferService == null) {
             return null
         }
 
@@ -235,12 +252,25 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
             isFromLocalUser = true
         )
 
-        dataTransferService?.sendMessage(bluetoothMessage.toByteArray())
+        dataTransferService?.trySendMessage(bluetoothMessage.toByteArray())
 
         return bluetoothMessage
     }
 
-    // Function that close the connection when someone disconnects
+    @OptIn(DelicateCoroutinesApi::class)
+    fun sendRawData(bytes: ByteArray) {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT) || dataTransferService == null) {
+            return
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            dataTransferService?.trySendMessage(bytes)
+        }
+    }
+
+    /**
+     * Closes the connection when someone disconnects
+     */
     override fun closeConnection() {
         currentClientSocket?.close()
         currentServerSocket?.close()
@@ -248,14 +278,18 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
         currentServerSocket = null
     }
 
-    // It clears everything from our bluetoothcontroller.
+    /**
+     * It clears everything from our bluetoothcontroller.
+     */
     override fun release() {
         context.unregisterReceiver(foundDeviceReceiver)
         context.unregisterReceiver(bluetoothStateReceiver)
         closeConnection()
     }
 
-    // Updates always the paired devices which can be provided in the current moment
+    /**
+     * Updates always the paired devices which can be provided in the current moment
+     */
     private fun updatePairedDevices() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
             return
@@ -268,18 +302,19 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
             }
     }
 
-
-    // Helper function. It checks whether we have a certain permission or not.
-    // Returns a boolean whether we have the permission or not
+    /**
+     * Helper function. It checks whether we have a certain permission or not.
+     * Returns a boolean whether we have the permission or not
+     */
     private fun hasPermission(permission: String): Boolean {
         return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
     // Definition of the UUID, which is needed for the connection (both devices need the same ID).
     // Will be used in StartBluetoothServer
-    companion object {
-        //UUID ursprünglich: "27b7d1da-08c7-4505-a6d1-2459987e5e2d"
-        //UUID Vom Bluedot server:“00001101-0000-1000-8000-00805f9b34fb”
-        const val SERVICE_UUID = "00001101-0000-1000-8000-00805f9b34fb"
+    private companion object {
+        // UUID ursprünglich: "27b7d1da-08c7-4505-a6d1-2459987e5e2d"
+        // UUID Vom Bluedot server:“00001101-0000-1000-8000-00805f9b34fb”
+        private const val SERVICE_UUID = "00001101-0000-1000-8000-00805f9b34fb"
     }
 }
