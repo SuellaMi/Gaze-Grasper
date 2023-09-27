@@ -278,6 +278,7 @@ class AndroidBluetoothController(private val context: Context) : BluetoothContro
     // Definition of the UUID, which is needed for the connection (both devices need the same ID).
     // Will be used in StartBluetoothServer
     companion object {
+        //UUID Vom Bluedot server:“00001101-0000-1000-8000-00805f9b34fb”
         const val SERVICE_UUID = "27b7d1da-08c7-4505-a6d1-2459987e5e2d"
     }
 }
